@@ -1,18 +1,18 @@
 package controllers
 
+import com.google.inject.Inject
+import handlers.SlackHandler
 import models.slack.IncomingMessage
 import models.slack.IncomingMessage.incomingMessageForm
-import models.slack.OutgoingMessage
 import models.slack.OutgoingMessage.outgoingMessageWrites
-import models.slack.ResponseType
 import play.api.libs.json.Json
 import play.api.mvc.Action
 import play.api.mvc.Controller
 
-class SlackController extends Controller {
+class SlackController @Inject() (slackHandler: SlackHandler) extends Controller {
 
   def respond: Action[IncomingMessage] = Action(parse.form(incomingMessageForm)) { request =>
-    val message = OutgoingMessage(ResponseType.inChannel, "pong!")
+    val message = slackHandler handle request.body
     Ok(Json.toJson(message))
   }
 }

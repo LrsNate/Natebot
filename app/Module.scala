@@ -1,4 +1,7 @@
 import com.google.inject.AbstractModule
+import com.google.inject.Provides
+import handlers.slack.Handler
+import handlers.slack.PingHandler
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -11,8 +14,8 @@ import com.google.inject.AbstractModule
  * configuration file.
  */
 class Module extends AbstractModule {
+  override def configure(): Unit = ()
 
-  override def configure(): Unit = {
-  }
-
+  @Provides
+  def getHandlers(pingHandler: PingHandler): Seq[Handler] = Seq(pingHandler)
 }
