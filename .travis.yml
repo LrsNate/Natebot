@@ -1,0 +1,6 @@
+language: scala
+scala:
+  - 2.11.7
+
+notifications:
+  slack: kashisme:iKomniF6mcPviXMS7J9BvYiz
