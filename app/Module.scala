@@ -1,3 +1,5 @@
+import java.time.Clock
+
 import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import handlers.slack.Handler
@@ -15,6 +17,9 @@ import handlers.slack.PingHandler
  */
 class Module extends AbstractModule {
   override def configure(): Unit = ()
+
+  @Provides
+  def getClock: Clock = Clock.systemUTC()
 
   @Provides
   def getHandlers(pingHandler: PingHandler): Seq[Handler] = Seq(pingHandler)
