@@ -1,7 +1,5 @@
 package models.slack
 
-import play.api.libs.json.JsString
-
 /**
   * Created by Nate on 01/03/2017.
   */

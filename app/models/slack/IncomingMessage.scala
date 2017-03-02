@@ -31,4 +31,7 @@ object IncomingMessage {
       "response_url" -> text
     )(IncomingMessage.apply)(IncomingMessage.unapply)
   )
+
+  def apply(message: String): IncomingMessage =
+    IncomingMessage(null, null, null, null, null, null, null, null, message, null)
 }

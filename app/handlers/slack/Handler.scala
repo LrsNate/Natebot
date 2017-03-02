@@ -5,6 +5,6 @@ import models.slack.OutgoingMessage
 
 
 trait Handler {
-  def accept(message: IncomingMessage): Boolean
-  def handle(message: IncomingMessage): OutgoingMessage
+  type MessageProcessor = IncomingMessage => OutgoingMessage
+  def accept(message: IncomingMessage): Option[MessageProcessor]
 }

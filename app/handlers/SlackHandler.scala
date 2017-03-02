@@ -4,17 +4,14 @@ import com.google.inject.Inject
 import handlers.slack.Handler
 import models.slack.IncomingMessage
 import models.slack.OutgoingMessage
-import models.slack.ResponseType.inChannel
 
 
 class SlackHandler @Inject() (handlers: Seq[Handler]) {
   def handle(message: IncomingMessage): OutgoingMessage = {
-    handlers find {
-      _ accept message
+    handlers map { _ accept message } collectFirst {
+      case Some(processor) => processor
     } map {
-      _ handle message
-    } getOrElse {
-      OutgoingMessage(inChannel, "...sorry, what was that?")
-    }
+      _ apply message
+    } getOrElse OutgoingMessage("...I'm sorry, what was that?")
   }
 }

@@ -1,5 +1,6 @@
 package models.slack
 
+import models.slack.ResponseType.inChannel
 import play.api.libs.json.JsObject
 import play.api.libs.json.Json
 import play.api.libs.json.Writes
@@ -13,4 +14,6 @@ object OutgoingMessage {
       "text" -> m.text
     )
   }
+
+  def apply(message: String): OutgoingMessage = OutgoingMessage(inChannel, message)
 }
