@@ -17,13 +17,14 @@ import scala.concurrent.ExecutionContext
 @Singleton
 class SlackController @Inject() (slackHandler: SlackHandler,
                                  historyDao: HistoryDao,
-                                 implicit val exec: ExecutionContext) extends Controller {
+                                 implicit val ec: ExecutionContext) extends Controller {
 
-  def respond: Action[IncomingMessage] = Action(parse.form(incomingMessageForm)) { request =>
+  def respond: Action[IncomingMessage] = Action.async(parse.form(incomingMessageForm)) { request =>
     historyDao.save(request.body) map { message =>
       Logger info s"Saved: <${message.user_name}> ${message.command} ${message.text}"
     }
-    val message = slackHandler handle request.body
-    Ok(Json.toJson(message))
+    slackHandler.handle(request.body) map { message =>
+      Ok(Json.toJson(message))
+    }
   }
 }

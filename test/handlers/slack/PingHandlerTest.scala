@@ -3,6 +3,7 @@ package handlers.slack
 import models.slack.IncomingMessage
 import org.scalatest.Matchers
 import org.scalatest.WordSpec
+import play.api.libs.concurrent.Execution.Implicits._
 
 
 class PingHandlerTest extends WordSpec with Matchers {
@@ -15,8 +16,9 @@ class PingHandlerTest extends WordSpec with Matchers {
       processorOpt shouldBe defined
 
       val processor = processorOpt.get
-      val response = processor apply IncomingMessage("ping")
-      response.text shouldEqual "pong!"
+      processor.apply() map { response =>
+        response.text shouldEqual "pong!"
+      }
     }
 
     "reject anything else" in {

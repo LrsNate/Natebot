@@ -12,13 +12,13 @@ import scala.concurrent.{ExecutionContext, Future}
  *
  * @param mat This object is needed to handle streaming of requests
  * and responses.
- * @param exec This class is needed to execute code asynchronously.
+ * @param ec This class is needed to execute code asynchronously.
  * It is used below by the `map` method.
  */
 @Singleton
 class ExampleFilter @Inject()(
     implicit override val mat: Materializer,
-    exec: ExecutionContext) extends Filter {
+    ec: ExecutionContext) extends Filter {
 
   override def apply(nextFilter: RequestHeader => Future[Result])
            (requestHeader: RequestHeader): Future[Result] = {
