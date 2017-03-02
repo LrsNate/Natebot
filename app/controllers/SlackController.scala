@@ -4,9 +4,9 @@ import com.google.inject.Inject
 import com.google.inject.Singleton
 import dao.HistoryDao
 import handlers.SlackHandler
+import models.Forms._
+import models.JsonFormats._
 import models.slack.IncomingMessage
-import models.slack.IncomingMessage.incomingMessageForm
-import models.slack.OutgoingMessage.outgoingMessageWrites
 import play.api.Logger
 import play.api.libs.json.Json
 import play.api.mvc.Action

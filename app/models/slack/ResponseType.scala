@@ -1,8 +1,5 @@
 package models.slack
 
-/**
-  * Created by Nate on 01/03/2017.
-  */
 case class ResponseType(value: String) {
   override def toString: String = value
 }

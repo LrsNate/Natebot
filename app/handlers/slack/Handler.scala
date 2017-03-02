@@ -8,5 +8,6 @@ import scala.concurrent.Future
 
 trait Handler {
   type ResponseProvider = () => Future[OutgoingMessage]
+  type MessageHandler = IncomingMessage => ResponseProvider
   def accept(message: IncomingMessage): Option[ResponseProvider]
 }
