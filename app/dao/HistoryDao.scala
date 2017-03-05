@@ -14,9 +14,9 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 @Singleton
-class HistoryDao @Inject() (reactiveMongoApi: ReactiveMongoApi,
+class HistoryDao @Inject() (implicit reactiveMongoApi: ReactiveMongoApi,
                             clock: Clock,
-                            implicit val ec: ExecutionContext) {
+                            ec: ExecutionContext) {
   private def db = reactiveMongoApi.database
 
   private def history = db map { _.collection[JSONCollection]("history") }

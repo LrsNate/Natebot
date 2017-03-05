@@ -10,7 +10,7 @@ import scala.concurrent.Future
 class PingHandler extends Handler {
   private val pattern = "^\\s*ping\\s*$".r
 
-  override def accept(message: IncomingMessage): Option[ResponseProvider] =
+  override def apply(message: IncomingMessage): Option[ResponseProvider] =
     pattern.findFirstIn(message.text).map(_ => handle(message))
 
   private def handle(message: IncomingMessage)(): Future[OutgoingMessage] = {

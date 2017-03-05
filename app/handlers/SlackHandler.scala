@@ -10,10 +10,10 @@ import scala.concurrent.Future
 
 class SlackHandler @Inject() (handlers: Seq[Handler]) {
   def handle(message: IncomingMessage): Future[OutgoingMessage] = {
-    handlers map { _ accept message } collectFirst {
+    handlers map { _(message) } collectFirst {
       case Some(processor) => processor
     } map {
-      _.apply()
+      _()
     } getOrElse Future.successful(OutgoingMessage("...I'm sorry, what was that?"))
   }
 }

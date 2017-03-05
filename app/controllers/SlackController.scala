@@ -15,9 +15,9 @@ import play.api.mvc.Controller
 import scala.concurrent.ExecutionContext
 
 @Singleton
-class SlackController @Inject() (slackHandler: SlackHandler,
+class SlackController @Inject() (implicit slackHandler: SlackHandler,
                                  historyDao: HistoryDao,
-                                 implicit val ec: ExecutionContext) extends Controller {
+                                 ec: ExecutionContext) extends Controller {
 
   def respond: Action[IncomingMessage] = Action.async(parse.form(incomingMessageForm)) { request =>
     historyDao.save(request.body) map { message =>

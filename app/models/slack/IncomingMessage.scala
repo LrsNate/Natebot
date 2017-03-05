@@ -12,6 +12,8 @@ case class IncomingMessage(token: String,
                            response_url: String)
 
 object IncomingMessage {
+  def apply(author: String, message: String): IncomingMessage =
+    IncomingMessage(null, null, null, null, null, null, author, null, message, null)
   def apply(message: String): IncomingMessage =
-    IncomingMessage(null, null, null, null, null, null, null, null, message, null)
+    IncomingMessage(null, message)
 }
