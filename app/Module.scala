@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import handlers.slack.Handler
 import handlers.slack.PingHandler
+import handlers.slack.PollHandler
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -22,5 +23,8 @@ class Module extends AbstractModule {
   def getClock: Clock = Clock.systemUTC()
 
   @Provides
-  def getHandlers(pingHandler: PingHandler): Seq[Handler] = Seq(pingHandler)
+  def getHandlers(pingHandler: PingHandler, pollHandler: PollHandler): Seq[Handler] = Seq(
+    pollHandler,
+    pingHandler
+  )
 }
