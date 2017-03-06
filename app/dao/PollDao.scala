@@ -26,9 +26,13 @@ class PollDao @Inject()(implicit reactiveMongoApi: ReactiveMongoApi,
   }
 
   def create(poll: Poll): Future[Boolean] = {
-    polls flatMap {
-      _.insert(Json.toJson(poll).as[JsObject])
-    } map { _.ok }
+    polls flatMap { polls =>
+      polls.count(Some(Json.obj("title" -> poll.title, "isActive" -> true))) flatMap {
+        case 0 =>
+          polls.insert(Json.toJson(poll).as[JsObject]) map { _.ok }
+        case _ => Future.successful(false)
+      }
+    }
   }
 
   def listActive(): Future[Seq[Poll]] = {
