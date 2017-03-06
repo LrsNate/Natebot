@@ -38,6 +38,7 @@ class PollDao @Inject()(implicit reactiveMongoApi: ReactiveMongoApi,
   def listActive(): Future[Seq[Poll]] = {
     polls flatMap { polls =>
       val cursor = polls.find(Json.obj("isActive" -> true)).cursor[JsObject]()
+      //noinspection ScalaDeprecation
       cursor.collect[List]() map { _.map(_.as[Poll]) }
     }
   }
