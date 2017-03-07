@@ -19,41 +19,9 @@ import scala.concurrent.Future
 class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar with Matchers {
   private val instant = Instant ofEpochSecond 1
 
-  private val clock = Clock.fixed(instant, ZoneId of "UTC")
   private val mockPollDao = mock[PollDao]
 
-  private val handler = new PollHandler()(mockPollDao, clock, executionContext)
-
-  "The poll create handler" should {
-    "create a Poll with a create request" in {
-      val message = IncomingMessage("nate", "poll create foo")
-      when(mockPollDao.create(Poll("foo", "nate", instant))) thenReturn Future.successful(true)
-      val processor = handler(message).value
-
-      processor() map { response =>
-        response.text shouldEqual "Ok! Created poll: foo by nate"
-      }
-    }
-
-    "propagate pollDao errors" in {
-      val message = IncomingMessage("nate", "poll create foo")
-      when(mockPollDao create Poll("foo", "nate", instant)) thenReturn Future.successful(false)
-      val processor = handler(message).value
-
-      processor() map { response =>
-        response.text shouldEqual "Sorry, you are not authorized to perform this action."
-      }
-    }
-
-    "reject invalid poll titles" in {
-      val message = IncomingMessage("nate", "poll create j n")
-      val processor = handler(message).value
-
-      processor() map { response =>
-        response.text shouldEqual "Sorry, that doesn't look like a valid query."
-      }
-    }
-  }
+  private val handler = new PollHandler()(mockPollDao, executionContext)
 
   "The poll list handler" should {
     val poll1 = Poll("foo", "nate", Instant ofEpochSecond 1)

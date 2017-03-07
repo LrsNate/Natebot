@@ -4,6 +4,7 @@ import com.google.inject.AbstractModule
 import com.google.inject.Provides
 import handlers.slack.Handler
 import handlers.slack.PingHandler
+import handlers.slack.PollAdminHandler
 import handlers.slack.PollHandler
 
 /**
@@ -23,7 +24,10 @@ class Module extends AbstractModule {
   def getClock: Clock = Clock.systemUTC()
 
   @Provides
-  def getHandlers(pingHandler: PingHandler, pollHandler: PollHandler): Seq[Handler] = Seq(
+  def getHandlers(pingHandler: PingHandler,
+                  pollAdminHandler: PollAdminHandler,
+                  pollHandler: PollHandler): Seq[Handler] = Seq(
+    pollAdminHandler,
     pollHandler,
     pingHandler
   )
