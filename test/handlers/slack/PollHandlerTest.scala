@@ -6,6 +6,7 @@ import java.time.ZoneId
 
 import dao.PollDao
 import models.poll.Poll
+import models.poll.PollOption
 import models.slack.IncomingMessage
 import org.mockito.Mockito._
 import org.scalatest.AsyncWordSpec
@@ -45,7 +46,7 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
     }
 
     "reject invalid poll titles" in {
-      val message = IncomingMessage("nate", "poll create f#$(87")
+      val message = IncomingMessage("nate", "poll create j n")
       val processor = handler(message).value
 
       processor() map { response =>
@@ -85,6 +86,61 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
         response.text shouldEqual "There are 2 active polls:\n" +
           "foo, created by nate on 1970-01-01T00:00:01Z\n" +
           "bar, created by nate on 1970-01-01T00:00:02Z"
+      }
+    }
+  }
+
+  "The poll show handler" should {
+    val option1 = PollOption("foo", Seq("nate", "kashim"))
+    val option2 = PollOption("bar")
+
+    val message = IncomingMessage("poll show foo")
+    val processor = handler(message).value
+
+    def createPoll(options: Seq[PollOption]): Future[Option[Poll]] = Future.successful(
+      Some(Poll("foo", "nate", Instant ofEpochSecond 1, isActive = true, options)))
+
+    "display a poll with no options" in {
+      when(mockPollDao.find("foo")) thenReturn createPoll(Seq())
+
+      processor() map { response =>
+        response.text shouldEqual "foo, created by nate on 1970-01-01T00:00:01Z (0 option)"
+      }
+    }
+
+    "display a poll with one option" in {
+      when(mockPollDao.find("foo")) thenReturn createPoll(Seq(option1))
+
+      processor() map { response =>
+        response.text shouldEqual "foo, created by nate on 1970-01-01T00:00:01Z (1 option)\n" +
+          "foo (2): kashim, nate"
+      }
+    }
+
+    "display a poll with multiple options" in {
+      when(mockPollDao.find("foo")) thenReturn createPoll(Seq(option1, option2))
+
+      processor() map { response =>
+        response.text shouldEqual "foo, created by nate on 1970-01-01T00:00:01Z (2 options)\n" +
+          "foo (2): kashim, nate\n" +
+          "bar (0)"
+      }
+    }
+
+    "propagate pollDao errors" in {
+      when(mockPollDao.find("foo")) thenReturn Future.successful(None)
+
+      processor() map { response =>
+        response.text shouldEqual "Sorry, I couldn't find the poll: foo"
+      }
+    }
+
+    "reject invalid queries" in {
+      val message = IncomingMessage("poll show a b c")
+      val processor = handler(message).value
+
+      processor() map { response =>
+        response.text shouldEqual "Sorry, that doesn't look like a valid poll title."
       }
     }
   }

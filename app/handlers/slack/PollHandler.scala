@@ -80,7 +80,7 @@ class PollHandler @Inject()(implicit pollDao: PollDao,
       val title = m.group("title")
 
       pollDao.find(title) map {
-        case None => OutgoingMessage("Sorry, I couldn't find a poll with that title.")
+        case None => OutgoingMessage(s"Sorry, I couldn't find the poll: $title")
         case Some(poll) => OutgoingMessage(poll.description)
       }
     } getOrElse {

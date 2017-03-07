@@ -1,7 +1,10 @@
 package models.poll
 
 case class PollOption(name: String, votes: Seq[String]) {
-  override def toString: String = s"$name (${votes.length}): ${votes.sorted.mkString(", ")}"
+  override def toString: String = {
+    val formattedVotes = votes.sorted.mkString(", ")
+    s"$name (${votes.length})${if (votes.nonEmpty) s": $formattedVotes" else ""}"
+  }
 }
 
 object PollOption {
