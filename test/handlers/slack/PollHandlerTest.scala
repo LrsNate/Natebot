@@ -41,7 +41,7 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       val processor = handler(message).value
 
       processor() map { response =>
-        response.text shouldEqual "Oops, something went wrong. Is there already a poll with that title?"
+        response.text shouldEqual "Sorry, you are not authorized to perform this action."
       }
     }
 
@@ -50,7 +50,7 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       val processor = handler(message).value
 
       processor() map { response =>
-        response.text shouldEqual "Sorry, I need a valid title to create a poll."
+        response.text shouldEqual "Sorry, that doesn't look like a valid query."
       }
     }
   }
@@ -140,7 +140,7 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       val processor = handler(message).value
 
       processor() map { response =>
-        response.text shouldEqual "Sorry, that doesn't look like a valid poll title."
+        response.text shouldEqual "Sorry, that doesn't look like a valid query."
       }
     }
   }

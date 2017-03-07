@@ -38,10 +38,11 @@ class PollDao @Inject()(implicit reactiveMongoApi: ReactiveMongoApi,
     }
   }
 
-  def addOption(title: String, option: PollOption): Future[Boolean] = {
+  def addOption(title: String, author: String, option: PollOption): Future[Boolean] = {
     polls flatMap { polls =>
       polls.update(Json.obj(
         "title" -> title,
+        "author" -> author,
         "isActive" -> true,
         "options" -> Json.obj(
           "$not" -> Json.obj(

@@ -37,10 +37,10 @@ class PollHandler @Inject()(implicit pollDao: PollDao,
 
       pollDao.create(Poll(title, author, clock.instant())) map {
         case true => OutgoingMessage(s"Ok! Created poll: $title by $author")
-        case false => OutgoingMessage("Oops, something went wrong. Is there already a poll with that title?")
+        case false => FORBIDDEN
       }
     } getOrElse {
-      Future.successful(OutgoingMessage("Sorry, I need a valid title to create a poll."))
+      Future.successful(BAD_REQUEST)
     }
   }
 
@@ -49,15 +49,15 @@ class PollHandler @Inject()(implicit pollDao: PollDao,
 
     pattern.findFirstMatchIn(message.text) map { m =>
       val pollTitle = m.group("title")
+      val author = message.user_name
       val optionName = m.group("option")
 
-      pollDao.addOption(pollTitle, PollOption(optionName)) map {
+      pollDao.addOption(pollTitle, author, PollOption(optionName)) map {
         case true => OutgoingMessage(s"Ok! Added option $optionName to poll $pollTitle")
-        case false => OutgoingMessage("Sorry, I can't do that. Either the poll doesn't exist," +
-          " or this option is already in the poll.")
+        case false => FORBIDDEN
       }
     } getOrElse {
-      Future.successful(OutgoingMessage("Sorry, that doesn't look like a valid query."))
+      Future.successful(BAD_REQUEST)
     }
   }
 
@@ -84,7 +84,7 @@ class PollHandler @Inject()(implicit pollDao: PollDao,
         case Some(poll) => OutgoingMessage(poll.description)
       }
     } getOrElse {
-      Future.successful(OutgoingMessage("Sorry, that doesn't look like a valid poll title."))
+      Future.successful(BAD_REQUEST)
     }
   }
 }
