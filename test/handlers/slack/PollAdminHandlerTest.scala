@@ -32,7 +32,7 @@ class PollAdminHandlerTest extends AsyncWordSpec  with OptionValues with Mockito
       val processor = handler(message).value
 
       processor() map { response =>
-        response.text shouldEqual "Ok! Created poll: foo by nate"
+        response.text shouldEqual "Ok! Created poll: foo by n\u200Cate"
       }
     }
 

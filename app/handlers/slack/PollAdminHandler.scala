@@ -5,6 +5,8 @@ import java.time.Clock
 import com.google.inject.Inject
 import com.google.inject.Singleton
 import dao.PollDao
+import models.Names
+import models.Names.escape
 import models.poll.Poll
 import models.poll.PollOption
 import models.slack.IncomingMessage
@@ -36,7 +38,7 @@ class PollAdminHandler @Inject()(implicit pollDao: PollDao,
       val author = message.user_name
 
       pollDao.create(Poll(title, author, clock.instant())) map {
-        case true => OutgoingMessage(s"Ok! Created poll: $title by $author")
+        case true => OutgoingMessage(s"Ok! Created poll: $title by ${escape(author)}")
         case false => FORBIDDEN
       }
     } getOrElse {

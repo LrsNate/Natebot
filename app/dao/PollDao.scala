@@ -69,7 +69,7 @@ class PollDao @Inject()(implicit reactiveMongoApi: ReactiveMongoApi,
         "title" -> title,
         "options.name" -> option
       ), Json.obj(
-        "$push" -> Json.obj(
+        "$addToSet" -> Json.obj(
           "options.$.votes" -> username
         )
       ))

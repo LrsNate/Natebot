@@ -39,7 +39,7 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
 
       processor() map { response =>
         response.text shouldEqual "There is one active poll:\n" +
-          "foo, created by nate on 1970-01-01T00:00:01Z"
+          "foo, created by n\u200Cate on 1970-01-01T00:00:01Z"
       }
     }
 
@@ -48,8 +48,8 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
 
       processor() map { response =>
         response.text shouldEqual "There are 2 active polls:\n" +
-          "foo, created by nate on 1970-01-01T00:00:01Z\n" +
-          "bar, created by nate on 1970-01-01T00:00:02Z"
+          "foo, created by n\u200Cate on 1970-01-01T00:00:01Z\n" +
+          "bar, created by n\u200Cate on 1970-01-01T00:00:02Z"
       }
     }
   }
@@ -68,7 +68,7 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       when(mockPollDao.find("foo")) thenReturn createPoll(Seq())
 
       processor() map { response =>
-        response.text shouldEqual "foo, created by nate on 1970-01-01T00:00:01Z (0 option)"
+        response.text shouldEqual "foo, created by n\u200Cate on 1970-01-01T00:00:01Z (0 option)"
       }
     }
 
@@ -76,8 +76,8 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       when(mockPollDao.find("foo")) thenReturn createPoll(Seq(option1))
 
       processor() map { response =>
-        response.text shouldEqual "foo, created by nate on 1970-01-01T00:00:01Z (1 option)\n" +
-          "foo (2): kashim, nate"
+        response.text shouldEqual "foo, created by n\u200Cate on 1970-01-01T00:00:01Z (1 option)\n" +
+          "foo (2): k\u200Cashim, n\u200Cate"
       }
     }
 
@@ -85,8 +85,8 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       when(mockPollDao.find("foo")) thenReturn createPoll(Seq(option1, option2))
 
       processor() map { response =>
-        response.text shouldEqual "foo, created by nate on 1970-01-01T00:00:01Z (2 options)\n" +
-          "foo (2): kashim, nate\n" +
+        response.text shouldEqual "foo, created by n\u200Cate on 1970-01-01T00:00:01Z (2 options)\n" +
+          "foo (2): k\u200Cashim, n\u200Cate\n" +
           "bar (0)"
       }
     }
