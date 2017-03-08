@@ -16,4 +16,9 @@ object IncomingMessage {
     IncomingMessage(null, null, null, null, null, null, author, null, message, null)
   def apply(message: String): IncomingMessage =
     IncomingMessage(null, message)
+
+  def shift(message: IncomingMessage): IncomingMessage = {
+    val verb = message.command.substring(1)
+    message.copy(command = "/natebot", text = s"$verb ${message.text}")
+  }
 }
