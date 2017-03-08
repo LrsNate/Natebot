@@ -6,4 +6,4 @@
 GET         /                     controllers.HomeController.index
 
 POST        /slack/natebot        controllers.SlackController.natebot
-POST        /nate/poll            controllers.SlackController.poll
+POST        /slack/poll            controllers.SlackController.poll
