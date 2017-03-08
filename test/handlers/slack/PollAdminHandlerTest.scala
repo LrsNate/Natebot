@@ -86,4 +86,13 @@ class PollAdminHandlerTest extends AsyncWordSpec  with OptionValues with Mockito
       }
     }
   }
+
+  "The poll admin handler" should {
+    "reject any other query" in {
+      val message = IncomingMessage("foo")
+      val processorOpt = handler(message)
+
+      processorOpt shouldBe None
+    }
+  }
 }

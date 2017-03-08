@@ -1,8 +1,6 @@
 package handlers.slack
 
-import java.time.Clock
 import java.time.Instant
-import java.time.ZoneId
 
 import dao.PollDao
 import models.poll.Poll
@@ -17,8 +15,6 @@ import org.scalatest.mockito.MockitoSugar
 import scala.concurrent.Future
 
 class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar with Matchers {
-  private val instant = Instant ofEpochSecond 1
-
   private val mockPollDao = mock[PollDao]
 
   private val handler = new PollHandler()(mockPollDao, executionContext)
@@ -105,6 +101,36 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
 
     "reject invalid queries" in {
       val message = IncomingMessage("poll show a b c")
+      val processor = handler(message).value
+
+      processor() map { response =>
+        response.text shouldEqual "Sorry, that doesn't look like a valid query."
+      }
+    }
+  }
+
+  "The poll vote handler" should {
+    val message = IncomingMessage("nate", "poll vote foo bar")
+    val processor = handler(message).value
+
+    "add a vote with a vote query" in {
+      when(mockPollDao.vote("foo", "nate", "bar")) thenReturn Future.successful(true)
+
+      processor() map { response =>
+        response.text shouldEqual "Ok! Added your vote to bar on foo"
+      }
+    }
+
+    "propagate pollDao errors" in {
+      when(mockPollDao.vote("foo", "nate", "bar")) thenReturn Future.successful(false)
+
+      processor() map { response =>
+        response.text shouldEqual "Sorry, that doesn't look like a valid query."
+      }
+    }
+
+    "reject invalid queries" in {
+      val message = IncomingMessage("nate", "poll vote a")
       val processor = handler(message).value
 
       processor() map { response =>

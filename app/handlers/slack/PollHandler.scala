@@ -16,7 +16,8 @@ class PollHandler @Inject()(implicit pollDao: PollDao,
 
   private val responseProviders: Seq[(String, MessageHandler)] = Seq(
     "poll list" -> listActive,
-    "poll show" -> show
+    "poll show" -> show,
+    "poll vote" -> vote
   )
 
   override def apply(message: IncomingMessage): Option[ResponseProvider] = responseProviders collectFirst {
@@ -44,6 +45,23 @@ class PollHandler @Inject()(implicit pollDao: PollDao,
       pollDao.find(title) map {
         case None => OutgoingMessage(s"Sorry, I couldn't find the poll: $title")
         case Some(poll) => OutgoingMessage(poll.description)
+      }
+    } getOrElse {
+      Future.successful(BAD_REQUEST)
+    }
+  }
+
+  private def vote(message: IncomingMessage)(): Future[OutgoingMessage] = {
+    val pattern = "^poll vote (\\S+) (\\S+)$".r("title", "option")
+
+    pattern.findFirstMatchIn(message.text) map { m =>
+      val title = m.group("title")
+      val option = m.group("option")
+      val username = message.user_name
+
+      pollDao.vote(title, username, option) map {
+        case true => OutgoingMessage(s"Ok! Added your vote to $option on $title")
+        case false => BAD_REQUEST
       }
     } getOrElse {
       Future.successful(BAD_REQUEST)

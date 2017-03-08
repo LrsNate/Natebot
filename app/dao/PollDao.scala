@@ -53,12 +53,31 @@ class PollDao @Inject()(implicit reactiveMongoApi: ReactiveMongoApi,
         "$push" -> Json.obj(
           "options" -> Json.toJson(option)
         )
-      )) map { result =>
-        result.nModified match {
-          case 0 => false
-          case 1 => true
-          case _ => throw new IllegalStateException(s"Several polls were found with the title: $title")
-        }
+      ))
+    } map { result =>
+      result.nModified match {
+        case 0 => false
+        case 1 => true
+        case _ => throw new IllegalStateException(s"Several polls were found with the title: $title")
+      }
+    }
+  }
+
+  def vote(title: String, username: String, option: String): Future[Boolean] = {
+    polls flatMap { polls =>
+      polls.update(Json.obj(
+        "title" -> title,
+        "options.name" -> option
+      ), Json.obj(
+        "$push" -> Json.obj(
+          "options.$.votes" -> username
+        )
+      ))
+    } map { result =>
+      result.nModified match {
+        case 0 => false
+        case 1 => true
+        case _ => throw new IllegalStateException(s"Data consistency issue with poll title: $title")
       }
     }
   }
@@ -77,11 +96,11 @@ class PollDao @Inject()(implicit reactiveMongoApi: ReactiveMongoApi,
     polls flatMap { polls =>
       val cursor = polls.find(Json.obj("title" -> title, "isActive" -> true)).cursor[JsObject]()
       //noinspection ScalaDeprecation
-      cursor.collect[List]() map {
-        case Nil => None
-        case List(poll) => Some(poll.as[Poll])
-        case _ => throw new IllegalStateException(s"Several polls were found with the title: $title")
-      }
+      cursor.collect[List]()
+    } map {
+      case Nil => None
+      case List(poll) => Some(poll.as[Poll])
+      case _ => throw new IllegalStateException(s"Several polls were found with the title: $title")
     }
   }
 }
