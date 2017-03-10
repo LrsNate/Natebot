@@ -1,7 +1,5 @@
 package handlers.slack
 
-import java.time.Clock
-
 import com.google.inject.Inject
 import dao.PollDao
 import models.slack.IncomingMessage

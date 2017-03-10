@@ -1,12 +1,10 @@
 package handlers.slack
 
-import com.google.inject.Singleton
 import models.slack.IncomingMessage
 import models.slack.OutgoingMessage
 
 import scala.concurrent.Future
 
-@Singleton
 class PingHandler extends Handler {
   private val pattern = "^\\s*ping\\s*$".r
 

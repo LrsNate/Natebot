@@ -6,6 +6,7 @@ import handlers.slack.Handler
 import handlers.slack.PingHandler
 import handlers.slack.PollAdminHandler
 import handlers.slack.PollHandler
+import handlers.slack.StatusHandler
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -26,9 +27,11 @@ class Module extends AbstractModule {
   @Provides
   def getHandlers(pingHandler: PingHandler,
                   pollAdminHandler: PollAdminHandler,
-                  pollHandler: PollHandler): Seq[Handler] = Seq(
+                  pollHandler: PollHandler,
+                  statusHandler: StatusHandler): Seq[Handler] = Seq(
     pollAdminHandler,
     pollHandler,
-    pingHandler
+    pingHandler,
+    statusHandler
   )
 }

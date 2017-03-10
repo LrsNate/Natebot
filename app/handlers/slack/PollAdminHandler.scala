@@ -3,9 +3,7 @@ package handlers.slack
 import java.time.Clock
 
 import com.google.inject.Inject
-import com.google.inject.Singleton
 import dao.PollDao
-import models.Names
 import models.Names.escape
 import models.poll.Poll
 import models.poll.PollOption
@@ -16,7 +14,6 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 
-@Singleton
 class PollAdminHandler @Inject()(implicit pollDao: PollDao,
                                  clock: Clock,
                                  ec: ExecutionContext) extends Handler {
