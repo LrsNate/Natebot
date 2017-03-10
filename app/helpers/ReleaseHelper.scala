@@ -14,7 +14,6 @@ import scala.concurrent.ExecutionContext
 import scala.concurrent.Future
 
 
-@Singleton
 class ReleaseHelper @Inject()(implicit conf: Configuration,
                               ws: WSClient,
                               ec: ExecutionContext) {

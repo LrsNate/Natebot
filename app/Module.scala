@@ -7,6 +7,10 @@ import handlers.slack.PingHandler
 import handlers.slack.PollAdminHandler
 import handlers.slack.PollHandler
 import handlers.slack.StatusHandler
+import helpers.SlackClient
+import play.api.Configuration
+import play.api.libs.ws.WSClient
+import tasks.StartPingTask
 
 /**
  * This class is a Guice module that tells Guice how to bind several
@@ -19,7 +23,9 @@ import handlers.slack.StatusHandler
  * configuration file.
  */
 class Module extends AbstractModule {
-  override def configure(): Unit = ()
+  override def configure(): Unit = {
+    bind(classOf[StartPingTask]).asEagerSingleton()
+  }
 
   @Provides
   def getClock: Clock = Clock.systemUTC()
@@ -34,4 +40,10 @@ class Module extends AbstractModule {
     pingHandler,
     statusHandler
   )
+
+  @Provides
+  def getSlackClient(conf: Configuration, ws: WSClient): SlackClient = {
+    val webhookUrl = conf.getString("slack.webhook.natebot").get
+    new SlackClient(webhookUrl, ws)
+  }
 }
