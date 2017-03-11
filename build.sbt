@@ -9,7 +9,6 @@ scalaVersion := "2.11.8"
 coverageExcludedPackages := "<empty>;" +
   "dao\\..*;" +
   "controllers\\..*;" +
-  "filters\\..*;" +
   "router\\..*;" +
   "models.Forms;" +
   "models.JsonFormats"

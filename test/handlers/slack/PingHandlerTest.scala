@@ -3,18 +3,17 @@ package handlers.slack
 import models.slack.IncomingMessage
 import org.scalatest.AsyncWordSpec
 import org.scalatest.Matchers
+import org.scalatest.OptionValues
 
 
-class PingHandlerTest extends AsyncWordSpec with Matchers {
+class PingHandlerTest extends AsyncWordSpec with OptionValues with Matchers {
 
   val handler = new PingHandler
 
   "Ping Handler" should {
     "return pong on a ping query" in {
-      val processorOpt = handler(IncomingMessage("ping"))
-      processorOpt shouldBe defined
+      val processor = handler(IncomingMessage("ping")).value
 
-      val processor = processorOpt.get
       processor() map { response =>
         response.text shouldEqual "pong!"
       }
@@ -22,6 +21,7 @@ class PingHandlerTest extends AsyncWordSpec with Matchers {
 
     "reject any other command" in {
       val processorOpt = handler(IncomingMessage("foo"))
+
       processorOpt shouldBe None
     }
   }

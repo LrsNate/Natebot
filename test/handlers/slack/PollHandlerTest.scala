@@ -38,7 +38,8 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       when(mockPollDao.listActive()) thenReturn Future.successful(Seq(poll1))
 
       processor() map { response =>
-        response.text shouldEqual "There is one active poll:\n" +
+        response.text shouldEqual "" +
+          "There is one active poll:\n" +
           "foo, created by n\u200Cate on 1970-01-01T00:00:01Z"
       }
     }
@@ -47,7 +48,8 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       when(mockPollDao.listActive()) thenReturn Future.successful(Seq(poll1, poll2))
 
       processor() map { response =>
-        response.text shouldEqual "There are 2 active polls:\n" +
+        response.text shouldEqual "" +
+          "There are 2 active polls:\n" +
           "foo, created by n\u200Cate on 1970-01-01T00:00:01Z\n" +
           "bar, created by n\u200Cate on 1970-01-01T00:00:02Z"
       }
@@ -76,7 +78,8 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       when(mockPollDao.find("foo")) thenReturn createPoll(Seq(option1))
 
       processor() map { response =>
-        response.text shouldEqual "foo, created by n\u200Cate on 1970-01-01T00:00:01Z (1 option)\n" +
+        response.text shouldEqual "" +
+          "foo, created by n\u200Cate on 1970-01-01T00:00:01Z (1 option)\n" +
           "foo (2): k\u200Cashim, n\u200Cate"
       }
     }
@@ -85,7 +88,8 @@ class PollHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar 
       when(mockPollDao.find("foo")) thenReturn createPoll(Seq(option1, option2))
 
       processor() map { response =>
-        response.text shouldEqual "foo, created by n\u200Cate on 1970-01-01T00:00:01Z (2 options)\n" +
+        response.text shouldEqual "" +
+          "foo, created by n\u200Cate on 1970-01-01T00:00:01Z (2 options)\n" +
           "foo (2): k\u200Cashim, n\u200Cate\n" +
           "bar (0)"
       }

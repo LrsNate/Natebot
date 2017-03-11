@@ -3,7 +3,6 @@ package helpers
 import java.time.Instant
 
 import com.google.inject.Inject
-import com.google.inject.Singleton
 import models.Release
 import play.api.Configuration
 import play.api.libs.json.JsArray

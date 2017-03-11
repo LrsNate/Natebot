@@ -17,7 +17,7 @@ import org.scalatest.mockito.MockitoSugar
 import scala.concurrent.Future
 
 
-class PollAdminHandlerTest extends AsyncWordSpec  with OptionValues with MockitoSugar with Matchers {
+class PollAdminHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar with Matchers {
   private val instant = Instant ofEpochSecond 1
 
   private val clock = Clock.fixed(instant, ZoneId of "UTC")
