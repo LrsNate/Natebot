@@ -1,8 +1,14 @@
 language: scala
+
 scala:
   - 2.11.7
+
 jdk:
   - oraclejdk8
 
 notifications:
   slack: kashisme:iKomniF6mcPviXMS7J9BvYiz
+
+script: "sbt clean coverage test"
+
+after_success: "sbt coverageReport coveralls"
