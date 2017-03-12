@@ -6,10 +6,10 @@ lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.11.8"
 
-coverageExcludedPackages := "<empty>;" +
-//  "dao\\..*;" +
-//  "controllers\\.javascript\\..*;" +
-//  "router\\..*;" +
+coverageExcludedPackages := "" +
+  "Module;" +
+  ".*\\.Reverse.*;" +
+  "router\\..*;" +
   "models.Forms;" +
   "models.JsonFormats"
 
