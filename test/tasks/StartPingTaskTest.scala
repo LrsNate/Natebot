@@ -29,14 +29,15 @@ class StartPingTaskTest extends AsyncWordSpec with MockitoSugar with Matchers {
 
       new StartPingTask()(mockReleaseHelper, mockSlackClient, env, executionContext)
 
-      verify(mockSlackClient).send(OutgoingMessage("Started in dev mode"))
+      verify(mockSlackClient).sendAsBot(OutgoingMessage("Started in dev mode"), "natebot")
       succeed
     }
 
+    // FIXME verify() is not working in an async contexy
     "report the current version in prod mode" in {
       val env = Environment.simple(mode = Mode.Prod)
       when(mockReleaseHelper.getLatest) thenReturn Future {
-        verify(mockSlackClient).send(OutgoingMessage("Started on release: v42"))
+        verify(mockSlackClient).sendAsBot(OutgoingMessage("Started on release: v42"), "natebot")
         release
       }
 

@@ -15,10 +15,10 @@ class StartPingTask @Inject()(implicit releaseHelper: ReleaseHelper,
                               env: Environment,
                               ec: ExecutionContext) {
   if (env.mode == Mode.Dev) {
-    slackClient send OutgoingMessage(s"Started in dev mode")
+    slackClient.sendAsBot(OutgoingMessage(s"Started in dev mode"), "natebot")
   } else {
     releaseHelper.getLatest map { release =>
-      slackClient send OutgoingMessage(s"Started on release: v${release.version}")
+      slackClient.sendAsBot(OutgoingMessage(s"Started on release: v${release.version}"), "natebot")
     }
   }
 }

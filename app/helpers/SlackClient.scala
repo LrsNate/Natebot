@@ -1,14 +1,33 @@
 package helpers
 
-import com.google.inject.Inject
-import models.JsonFormats._
+
 import models.slack.OutgoingMessage
-import play.api.libs.json.Json
 import play.api.libs.ws.WSClient
+import play.api.libs.ws.WSResponse
+
+import scala.concurrent.Future
 
 
-class SlackClient @Inject()(incomingWebhookUrl: String, ws: WSClient) {
-  def send(message: OutgoingMessage): Unit = {
-    ws.url(incomingWebhookUrl).post(Json.toJson(message))
+class SlackClient(apiToken: String, postMessageUrl: String, ws: WSClient) {
+
+  def sendAsBot(message: OutgoingMessage, channel: String): Future[WSResponse] = {
+    ws.url(postMessageUrl)
+      .withQueryString(
+        "text" -> message.text,
+        "channel" -> channel,
+        "token" -> apiToken,
+        "username" -> "natebot",
+        "icon_emoji" -> ":lemon:")
+      .get()
+  }
+
+  def sendAsUser(message: OutgoingMessage, channel: String): Future[WSResponse] = {
+    ws.url(postMessageUrl)
+      .withQueryString(
+        "text" -> message.text,
+        "channel" -> channel,
+        "token" -> apiToken,
+        "as_user" -> "true")
+      .get()
   }
 }

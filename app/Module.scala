@@ -43,7 +43,9 @@ class Module extends AbstractModule {
 
   @Provides
   def getSlackClient(conf: Configuration, ws: WSClient): SlackClient = {
-    val webhookUrl = conf.getString("slack.webhook.natebot").get
-    new SlackClient(webhookUrl, ws)
+    val apiToken = conf.getString("slack.api.token").get
+    val postUrl = conf.getString("slack.api.postMessageUrl").get
+
+    new SlackClient(apiToken, postUrl, ws)
   }
 }
