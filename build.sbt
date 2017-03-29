@@ -9,6 +9,8 @@ scalaVersion := "2.11.8"
 coverageExcludedPackages := "" +
   "Module;" +
   ".*\\.Reverse.*;" +
+  "controllers\\..*;" +
+  "dao\\..*;" +
   "router\\..*;" +
   "models.Forms;" +
   "models.JsonFormats"
