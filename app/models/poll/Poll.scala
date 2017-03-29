@@ -13,6 +13,10 @@ case class Poll(title: String, author: String, createdAt: Instant, isActive: Boo
 }
 
 object Poll {
+  def apply(title: String, author: String, createdAt: Instant, options: Seq[PollOption]): Poll =
+    Poll(title, author, createdAt, isActive = true, options)
+
   def apply(title: String, author: String, createdAt: Instant): Poll =
     Poll(title, author, createdAt, isActive = true, Seq())
+
 }

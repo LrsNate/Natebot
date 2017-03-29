@@ -24,22 +24,22 @@ class PollAdminHandler @Inject()(implicit pollDao: PollDao,
   )
 
   override def apply(message: IncomingMessage): Option[ResponseProvider] = responseProviders collectFirst {
-    case (pattern, handler) if message.text startsWith pattern => handler(message)
+    case (pattern, handler) if message.text startsWith pattern + " " => handler(message)
   }
 
   private def create(message: IncomingMessage)(): Future[OutgoingMessage] = {
-    val pattern = "^poll create (\\S+)$".r("title")
+    val words = message.text.split("\\s+").toList.drop(2)
 
-    pattern.findFirstMatchIn(message.text) map { m =>
-      val title = m.group("title")
-      val author = message.user_name
+    words match {
+      case Nil => Future(BAD_REQUEST)
+      case title :: options =>
+        val author = message.user_name
+        val pollOptions = options.distinct map PollOption.apply
 
-      pollDao.create(Poll(title, author, clock.instant())) map {
-        case true => OutgoingMessage(s"Ok! Created poll: $title by ${escape(author)}")
-        case false => FORBIDDEN
-      }
-    } getOrElse {
-      Future.successful(BAD_REQUEST)
+        pollDao.create(Poll(title, author, clock.instant(), pollOptions)) map {
+          case true => OutgoingMessage(s"Ok! Created poll: $title by ${escape(author)}")
+          case false => FORBIDDEN
+        }
     }
   }
 

@@ -28,7 +28,7 @@ class PollAdminHandlerTest extends AsyncWordSpec with OptionValues with MockitoS
   "The poll create handler" should {
     "create a Poll with a create request" in {
       val message = IncomingMessage("nate", "poll create foo")
-      when(mockPollDao.create(Poll("foo", "nate", instant))) thenReturn Future.successful(true)
+      when(mockPollDao.create(Poll("foo", "nate", instant, Seq()))) thenReturn Future.successful(true)
       val processor = handler(message).value
 
       processor() map { response =>
@@ -46,12 +46,25 @@ class PollAdminHandlerTest extends AsyncWordSpec with OptionValues with MockitoS
       }
     }
 
-    "reject invalid poll titles" in {
-      val message = IncomingMessage("nate", "poll create j n")
+    "add initial poll options" in {
+      val message = IncomingMessage("nate", "poll create foo bar baz")
+      when(mockPollDao.create(Poll("foo", "nate", instant, Seq(PollOption("bar"), PollOption("baz"))))) thenReturn
+        Future.successful(true)
       val processor = handler(message).value
 
       processor() map { response =>
-        response.text shouldEqual "Sorry, that doesn't look like a valid query."
+        response.text shouldEqual "Ok! Created poll: foo by n\u200Cate"
+      }
+    }
+
+    "deduplicate poll options" in {
+      val message = IncomingMessage("nate", "poll create foo bar baz bar")
+      when(mockPollDao.create(Poll("foo", "nate", instant, Seq(PollOption("bar"), PollOption("baz"))))) thenReturn
+        Future.successful(true)
+      val processor = handler(message).value
+
+      processor() map { response =>
+        response.text shouldEqual "Ok! Created poll: foo by n\u200Cate"
       }
     }
   }
