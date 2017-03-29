@@ -1,5 +1,6 @@
 package handlers.slack
 
+
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
@@ -18,6 +19,7 @@ import scala.concurrent.Future
 
 
 class PollAdminHandlerTest extends AsyncWordSpec with OptionValues with MockitoSugar with Matchers {
+
   private val instant = Instant ofEpochSecond 1
 
   private val clock = Clock.fixed(instant, ZoneId of "UTC")
@@ -54,6 +56,15 @@ class PollAdminHandlerTest extends AsyncWordSpec with OptionValues with MockitoS
 
       processor() map { response =>
         response.text shouldEqual "Ok! Created poll: foo by n\u200Cate"
+      }
+    }
+
+    "reject invalid queries" in {
+      val message = IncomingMessage("nate", "poll create  ")
+      val processor = handler(message).value
+
+      processor() map { response =>
+        response.text shouldEqual "Sorry, that doesn't look like a valid query."
       }
     }
 
