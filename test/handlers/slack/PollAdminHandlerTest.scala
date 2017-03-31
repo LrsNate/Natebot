@@ -111,6 +111,37 @@ class PollAdminHandlerTest extends AsyncWordSpec with OptionValues with MockitoS
     }
   }
 
+  "The poll close handler" should {
+    "close a poll with a poll close request" in {
+      val message = IncomingMessage("nate", "poll close foo")
+      when(mockPollDao.close("foo", "nate")) thenReturn Future.successful(true)
+      val processor = handler(message).value
+
+      processor() map { response =>
+        response.text shouldEqual "Ok! Closed poll foo"
+      }
+    }
+
+    "propagate pollDao errors" in {
+      val message = IncomingMessage("nate", "poll close foo")
+      val processor = handler(message).value
+      when(mockPollDao.close("foo", "nate")) thenReturn Future.successful(false)
+
+      processor() map { response =>
+        response.text shouldEqual "Sorry, you are not authorized to perform this action."
+      }
+    }
+
+    "reject invalid queries" in {
+      val message = IncomingMessage("nate", "poll close  ")
+      val processor = handler(message).value
+
+      processor() map { response =>
+        response.text shouldEqual "Sorry, that doesn't look like a valid query."
+      }
+    }
+  }
+
   "The poll admin handler" should {
     "reject any other query" in {
       val message = IncomingMessage("foo")

@@ -63,6 +63,24 @@ class PollDao @Inject()(implicit reactiveMongoApi: ReactiveMongoApi,
     }
   }
 
+  def close(title: String, author: String): Future[Boolean] = {
+    polls flatMap { polls =>
+      polls.update(Json.obj(
+        "title" -> title,
+        "author" -> author,
+        "isActive" -> true
+      ), Json.obj(
+        "$set" -> Json.obj("isActive" -> false)
+      )) map { result =>
+        result.nModified match {
+          case 0 => false
+          case 1 => true
+          case _ => throw new IllegalStateException(s"Several polls were found with the title: $title")
+        }
+      }
+    }
+  }
+
   def vote(title: String, username: String, option: String): Future[Boolean] = {
     polls flatMap { polls =>
       polls.update(Json.obj(

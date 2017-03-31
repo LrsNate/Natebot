@@ -20,7 +20,8 @@ class PollAdminHandler @Inject()(implicit pollDao: PollDao,
 
   private val responseProviders: Seq[(String, MessageHandler)] = Seq(
     "poll create" -> create,
-    "poll add option" -> addOption
+    "poll add option" -> addOption,
+    "poll close" -> close
   )
 
   override def apply(message: IncomingMessage): Option[ResponseProvider] = responseProviders collectFirst {
@@ -57,6 +58,20 @@ class PollAdminHandler @Inject()(implicit pollDao: PollDao,
       }
     } getOrElse {
       Future.successful(BAD_REQUEST)
+    }
+  }
+
+  private def close(message: IncomingMessage)(): Future[OutgoingMessage] = {
+    val titleOpt = message.text.split("\\s+").toList.drop(2).headOption
+
+    titleOpt match {
+      case None => Future(BAD_REQUEST)
+      case Some(title) =>
+        val author = message.user_name
+        pollDao.close(title, author) map {
+          case true => OutgoingMessage(s"Ok! Closed poll $title")
+          case false => FORBIDDEN
+        }
     }
   }
 }
