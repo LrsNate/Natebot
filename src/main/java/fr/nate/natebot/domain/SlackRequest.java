@@ -4,14 +4,14 @@ import lombok.Data;
 
 @Data
 public class SlackRequest {
-    String token;
-    String team_id;
-    String team_domain;
-    String channel_id;
-    String channel_name;
-    String user_id;
-    String user_name;
-    String command;
-    String text;
-    String response_url;
+    private String token;
+    private String team_id;
+    private String team_domain;
+    private String channel_id;
+    private String channel_name;
+    private String user_id;
+    private String user_name;
+    private String command;
+    private String text;
+    private String response_url;
 }

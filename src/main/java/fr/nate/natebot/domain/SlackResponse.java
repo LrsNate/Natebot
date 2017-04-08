@@ -7,8 +7,8 @@ import lombok.Value;
 @Value
 @JsonNaming(PropertyNamingStrategy.SnakeCaseStrategy.class)
 public class SlackResponse {
-    String responseType;
-    String text;
+    private String responseType;
+    private String text;
 
     public static SlackResponse inChannel(String text) {
         return new SlackResponse("in_channel", text);
