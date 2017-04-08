@@ -1,6 +1,7 @@
 logs
-target
-/.idea
+/build/
+/.idea/
+/.gradle
 /.idea_modules
 /.classpath
 /.project

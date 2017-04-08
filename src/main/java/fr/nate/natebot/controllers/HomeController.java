@@ -1,6 +1,6 @@
 package fr.nate.natebot.controllers;
 
-import fr.nate.natebot.controllers.domain.Status;
+import fr.nate.natebot.domain.Status;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
