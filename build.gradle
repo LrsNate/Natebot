@@ -1,23 +1,25 @@
-apply plugin: 'java'
-apply plugin: 'idea'
-apply plugin: 'jacoco'
-apply plugin: 'coveralls'
-apply plugin: 'org.springframework.boot'
-
-group 'fr.nate'
-version '1.0-SNAPSHOT'
-
-sourceCompatibility = 1.8
-
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
         classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '1.5.2.RELEASE'
-        classpath group: 'org.kt3k.gradle.plugin', name: 'coveralls-gradle-plugin', version: '0.3.0'
     }
 }
+
+plugins {
+    id 'java'
+    id 'idea'
+    id 'jacoco'
+    id 'com.github.kt3k.coveralls' version '2.6.3'
+}
+
+apply plugin: 'org.springframework.boot'
+
+group 'fr.nate'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
 
 repositories {
     mavenCentral()
