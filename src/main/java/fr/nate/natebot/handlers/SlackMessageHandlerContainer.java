@@ -13,9 +13,9 @@ import static fr.nate.natebot.domain.SlackResponse.inChannel;
 public class SlackMessageHandlerContainer {
     private final List<MessageHandler> handlers;
 
-    public SlackResponse handle(SlackRequest request) {
+    public SlackResponse apply(SlackRequest request) {
         for (MessageHandler handler : handlers) {
-            Optional<SlackResponse> response = handler.handle(request);
+            Optional<SlackResponse> response = handler.apply(request);
             if (response.isPresent()) {
                 return response.get();
             }

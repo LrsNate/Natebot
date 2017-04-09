@@ -1,8 +1,14 @@
 package fr.nate.natebot.domain;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class SlackRequest {
     private String token;
     private String team_id;

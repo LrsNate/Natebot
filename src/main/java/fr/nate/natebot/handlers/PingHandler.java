@@ -12,7 +12,7 @@ import static fr.nate.natebot.domain.SlackResponse.inChannel;
 public class PingHandler implements MessageHandler {
 
     @Override
-    public Optional<SlackResponse> handle(SlackRequest request) {
+    public Optional<SlackResponse> apply(SlackRequest request) {
         if (!request.getText().equals("ping")) {
             return Optional.empty();
         }

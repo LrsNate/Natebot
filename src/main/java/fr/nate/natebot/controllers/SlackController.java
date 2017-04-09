@@ -16,6 +16,6 @@ public class SlackController {
 
     @PostMapping("/slack/natebot")
     public SlackResponse natebot(@ModelAttribute SlackRequest request) {
-        return slackMessageHandlerContainer.handle(request);
+        return slackMessageHandlerContainer.apply(request);
     }
 }
