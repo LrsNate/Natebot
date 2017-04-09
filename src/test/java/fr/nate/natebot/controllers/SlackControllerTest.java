@@ -43,4 +43,12 @@ public class SlackControllerTest {
                 .andExpect(content().json("{\"response_type\": \"in_channel\", " +
                         "\"text\": \"Ok!\"}"));
     }
+
+    @Test
+    public void testPoll() throws Exception {
+        mockMvc.perform(post("/slack/poll"))
+                .andExpect(status().isOk())
+                .andExpect(content().json("{\"response_type\": \"in_channel\", " +
+                        "\"text\": \"Sorry, this feature is not available yet.\"}"));
+    }
 }
